@@ -34,15 +34,17 @@ function loadJSON() {
 }
 
 function prepareStudentsData(jsonData) {
+  //create object from the student template
   jsonData.forEach((jsonObject) => {
-    const student = Object.create(Student); //create object from the student template
+    const student = Object.create(Student);
+
     //variables for easier use
     studentFullName = jsonObject.fullname.trim();
     studentHouse = jsonObject.house.trim();
+
     //conditions for exeptions
     for (let i = 1; i < studentFullName.lenght; i++) {
       previousChar = studentFullName[i - 1];
-
       if (previousChar === '"' || previousChar === "-") {
         studentFullName[i].toUpperCase();
         //makes sure that if the previous character is ", the letter becomes upper case
@@ -50,25 +52,26 @@ function prepareStudentsData(jsonData) {
         studentFullName[i];
       }
     }
+
     //first name
     student.firstName = studentFullName.split(" ")[0].charAt(0).toUpperCase() + studentFullName.split(" ")[0].substring(1).toLowerCase();
+
     //last name
     student.lastName = studentFullName.split(" ").at(-1).charAt(0).toUpperCase() + studentFullName.split(" ").at(-1).substring(1).toLowerCase();
 
     //checking for middle name
-
     if (studentFullName.indexOf(" ") === studentFullName.lastIndexOf(" ")) {
       student.middleName = "";
     } else {
       student.middleName = studentFullName.substring(studentFullName.indexOf(" ") + 1, studentFullName.lastIndexOf(" "));
     }
-    //middle name
 
+    //middle name
     student.middleName = student.middleName.charAt(0).toUpperCase() + student.middleName.substring(1).toLowerCase();
 
     //nickname
-    //probably if statement to check previous char else remove ""
     student.nickName = studentFullName.substring(studentFullName.indexOf('"') + 1, studentFullName.lastIndexOf('"'));
+
     //if they have a nickname, they don't have a middlename
     //incorrect but temporary fix for Ernie
     if (student.nickName != "") {
@@ -76,10 +79,6 @@ function prepareStudentsData(jsonData) {
     } else {
       student.middleName = student.middleName;
     }
-    //if index of first space different from index of last space then there is a middle name
-    //array of the middle name
-    //if the lenght is more than 1 (more than 1 middle name)
-    //capitalise the first letter and middlename= join of the middlename list (with for each of the array)
 
     //image file
     if (student.lastName === "Patil") {
@@ -97,11 +96,13 @@ function prepareStudentsData(jsonData) {
     student.house = studentHouse.charAt(0).toUpperCase() + studentHouse.substring(1).toLowerCase();
     console.log("student object", student);
 
-    // object into array
+    // push object into array
     allStudents.push(student);
-    //displaying the list length
+
+    //displaying the list length at the end of the page
     document.querySelector(".number_displayed").textContent = allStudents.length;
   });
+
   displayStudentsList(allStudents);
 }
 

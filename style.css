@@ -14,7 +14,7 @@ section */
 h1 {
   text-align: center;
   padding: 2rem;
-  padding-bottom: 3rem;
+  padding-bottom: 4rem;
 }
 header {
   height: 30vh;
@@ -22,35 +22,54 @@ header {
 }
 .main_wrapper {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-template-rows: auto;
   gap: 2rem;
-  margin: 1rem;
+  margin: 1rem 3rem;
 }
 .school_info {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
 }
-.school_info div {
+.school_info div,
+article {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.5rem;
 }
+
 nav {
-  grid-column: 1/6;
+  grid-column: 1/-1;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   gap: 1rem;
+}
+.user_choices {
+  display: flex;
+  flex-direction: row;
+  gap: 0.7rem;
 }
 .filter_and_sort {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 2rem;
+}
+.search_div {
+  display: flex;
+  flex-direction: column;
+}
+article {
+  background-color: rgb(120, 194, 120);
+  padding: 0.8rem;
+  border-radius: 10px;
+}
+button {
+  height: 100%;
 }

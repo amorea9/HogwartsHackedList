@@ -20,7 +20,7 @@ header {
   height: 30vh;
   background-color: aquamarine;
 }
-.main_wrapper {
+#template_wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-template-rows: auto;
@@ -49,6 +49,7 @@ nav {
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
+  margin-top: 1.5rem;
 }
 .user_choices {
   display: flex;

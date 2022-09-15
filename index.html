@@ -13,20 +13,20 @@
 
       <!--probably a template here too? -->
       <section class="school_info">
-        <div class="total_students"><span class="number_total_students">30</span><span class="students">Students</span></div>
-        <div class="expelled"><span class="number_expelled">0</span><span class="expelled_students">Expelled</span></div>
-        <div class="gryffindor"><span class="number_gryffindor">10</span><span class="gryffindor_students">Gryffindor</span></div>
-        <div class="ravenclaw"><span class="number_ravenclaw">12</span><span class="ravenclaw_students">Ravenclaw</span></div>
-        <div class="hufflepuff"><span class="number_hufflepuff">11</span><span class="hufflepuff_students">Hufflepuff</span></div>
-        <div class="slytherin"><span class="number_slytherin">9</span><span class="slytherin_students">Slytherin</span></div>
+        <div class="total_students"><span class="number_total_students">1</span><span class="students">Students</span></div>
+        <div class="expelled"><span class="number_expelled">1</span><span class="expelled_students">Expelled</span></div>
+        <div class="gryffindor"><span class="number_gryffindor">1</span><span class="gryffindor_students">Gryffindor</span></div>
+        <div class="ravenclaw"><span class="number_ravenclaw">1</span><span class="ravenclaw_students">Ravenclaw</span></div>
+        <div class="hufflepuff"><span class="number_hufflepuff">1</span><span class="hufflepuff_students">Hufflepuff</span></div>
+        <div class="slytherin"><span class="number_slytherin">1</span><span class="slytherin_students">Slytherin</span></div>
       </section>
     </header>
     <main>
-      <section class="main_wrapper">
+      <section id="main_wrapper">
         <nav>
           <div class="filter_and_sort">
             <select id="filter">
-              <option value="">--filter by--</option>
+              <option value="all">--filter by--</option>
               <option value="house_gryffindor">Gryffindor students</option>
               <option value="house_ravenclaw">Ravenclaw students</option>
               <option value="house_hufflepuff">Hufflepuff students</option>
@@ -35,7 +35,7 @@
               <option value="not_expelled">Not Expelled students</option>
             </select>
             <select id="sort">
-              <option value="">--sort by--</option>
+              <option value="all">--sort by--</option>
               <option value="first_name_asc">First name ascending ↑</option>
               <option value="first_name_desc">First name descending ↓</option>
               <option value="last_name_asc">Last name ascending ↑</option>
@@ -50,6 +50,7 @@
           </div>
         </nav>
 
+        <div id="template_wrapper"></div>
         <template class="student_card_template">
           <article>
             <img class="student_picture" src="images/potter_h.png" alt="harry potter" />
@@ -66,6 +67,7 @@
       <div class="displayed_now">displaying now: <span class="number_displayed">10</span></div>
     </main>
     <footer></footer>
+
     <script src="script.js"></script>
   </body>
 </html>

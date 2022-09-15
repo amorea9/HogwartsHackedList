@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Hogwarts school</h1>
+      <!--probably a template here too? -->
+      <section class="school_info">
+        <div class="total_students"><span class="number_total_students">30</span><span class="students">Students</span></div>
+        <div class="expelled"><span class="number_expelled">0</span><span class="expelled_students">Expelled</span></div>
+        <div class="gryffindor"><span class="number_gryffindor">10</span><span class="gryffindor_students">Gryffindor</span></div>
+        <div class="ravenclaw"><span class="number_ravenclaw">12</span><span class="ravenclaw_students">Ravenclaw</span></div>
+        <div class="hufflepuff"><span class="number_hufflepuff">11</span><span class="hufflepuff_students">Hufflepuff</span></div>
+        <div class="slytherin"><span class="number_slytherin">9</span><span class="slytherin_students">Slytherin</span></div>
+      </section>
+    </header>
+    <main>
+      <section class="main_wrapper">
+        <nav>
+          <div class="title">Class 1991</div>
+          <div class="filter_and_sort"><span class="filter">filter by</span> <span class="sort">sort by</span></div>
+        </nav>
+
+        <template class="student_card_template">
+          <article>
+            <img class="student_picture" src="images/potter_h.png" alt="harry potter" />
+            <div class="name">Harry</div>
+            <div class="last_name">Potter</div>
+            <button class="expel_student">Expel</button>
+            <button class="add_inquisitorial">Add to inquisitorial squad</button>
+            <button class="make_prefect">Make a prefect</button>
+          </article>
+        </template>
+      </section>
+      <div class="displayed_now">displaying now: <span class="number_displayed">10</span></div>
+    </main>
+    <footer></footer>
+    <script src="script.js"></script>
+  </body>
+</html>

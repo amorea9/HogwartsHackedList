@@ -1,0 +1,56 @@
+/* template around article card
+/* section to be a grid
+
+/* section margin 2 rem?
+/* nav to be flex
+/* article to be flex 
+section */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  text-align: center;
+  padding: 2rem;
+  padding-bottom: 3rem;
+}
+header {
+  height: 30vh;
+  background-color: aquamarine;
+}
+.main_wrapper {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  gap: 2rem;
+  margin: 1rem;
+}
+.school_info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+}
+.school_info div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+nav {
+  grid-column: 1/6;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.filter_and_sort {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem;
+}

@@ -74,3 +74,27 @@ article {
 button {
   height: 100%;
 }
+
+#sort {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#sort span.sortby[data-sort="firstName"],
+#sort span.sortby[data-sort="lastName"] {
+  text-decoration: underline;
+}
+
+#sort span.sortby[data-sort-direction="asc"]::after {
+  content: " ↓";
+}
+#sort span.sortby[data-sort-direction="desc"]::after {
+  content: " ↑";
+}
+
+.search_div {
+  margin-right: 2rem;
+}

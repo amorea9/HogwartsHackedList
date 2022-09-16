@@ -19,8 +19,9 @@ const Student = {
 };
 const settings = {
   filterBy: "all",
-  sortBy: "name",
+  sortBy: "firstName",
   sortDir: "asc",
+  searchBy: "",
 };
 
 let previousChar;
@@ -30,15 +31,6 @@ function init() {
   //event listener for the drop down options
   addEventsToButtons();
   loadJSON();
-}
-function addEventsToButtons() {
-  document.querySelector("#filter").addEventListener("change", readOptionsValues);
-}
-
-function readOptionsValues(event) {
-  //reads the value of the filter option selected
-  const selectedFilterOption = event.target.value;
-  setFilter(selectedFilterOption);
 }
 
 function loadJSON() {
@@ -52,6 +44,7 @@ function loadJSON() {
 
 function prepareStudentsData(jsonData) {
   allStudents = jsonData.map(prepareStudentData);
+
   buildStudentsList();
 }
 
@@ -116,16 +109,97 @@ function prepareStudentData(jsonObject) {
   return student;
 }
 
+function addEventsToButtons() {
+  document.querySelector("#filter").addEventListener("change", readFilterOptionsValues);
+  document.querySelectorAll("#sort [data-action='sort']").forEach((button) => button.addEventListener("click", readSortOptionsValues));
+  document.querySelector("#search_bar").addEventListener("keydown", searchString);
+  //can also use keyup event
+}
+
+function searchString() {
+  const searchBy = document.querySelector("#search_bar").value;
+  settings.searchBy = searchBy.toLowerCase();
+
+  console.log("searching for", settings.searchBy);
+  const searchedList = allStudents.filter(isTheStudent);
+
+  function isTheStudent(student) {
+    if (student.firstName.toLowerCase().includes(searchBy) || student.lastName.toLowerCase().includes(searchBy)) return student;
+  }
+  displayStudentsList(searchedList);
+}
+
+function clear() {
+  document.querySelector("#search_bar").value = "";
+}
+
+// function compareStringToArray(searchedList, searchBy) {
+//   searchedList.forEach((student) => student.compareCharacter);
+
+//   function compareCharacter(student) {
+//     for (let i = 0; i < settings.searchBy.length; i++) {
+//       if (student.firstName.split("")[i] === searchBy.split("")[i]) {
+//         return (searchedList = allStudents.filter(compareCharacter));
+//       }
+//     }
+//     return compareStringToArray(searchedList, settings.searchBy);
+//   }
+// }
+
+function readFilterOptionsValues(event) {
+  //reads the value of the filter option selected
+  const selectedFilterOption = event.target.value;
+  setFilter(selectedFilterOption);
+}
+
+function readSortOptionsValues(event) {
+  //reads the value of the sort option selected
+  const sortBy = event.target.dataset.sort;
+  const sortDir = event.target.dataset.sortDirection;
+
+  //find old sort by element
+  const oldElement = document.querySelector(`[data-sort='${settings.sortBy}']`);
+  oldElement.classList.remove("sortby");
+  // active sort button
+  event.target.classList.add("sortby");
+
+  //toggle the direcion after first click
+  if (sortDir === "asc") {
+    event.target.dataset.sortDirection = "desc";
+  } else {
+    event.target.dataset.sortDirection = "asc";
+  }
+
+  setSort(sortBy, sortDir);
+}
+function setSort(sortBy, sortDir) {
+  //storing values
+  settings.sortBy = sortBy;
+  settings.sortDir = sortDir;
+  //updating list with the sorting
+  buildStudentsList();
+}
 function setFilter(filter) {
   settings.filterBy = filter;
   buildStudentsList();
 }
 
 function buildStudentsList() {
+  displayStudentsInfo(allStudents);
+  //current list is the filtered list
   const currentList = filterList(allStudents);
-  console.log("current list:", currentList);
+  const sortedList = sortList(currentList);
+  displayStudentsList(sortedList);
+}
 
-  displayStudentsList(currentList);
+function displayStudentsInfo(allStudents) {
+  //displaying the stats info of the origial array of students at the top of the site
+  document.querySelector(".number_total_students").textContent = allStudents.length;
+  document.querySelector(".number_expelled").textContent = allStudents.filter(isExpelled).length;
+  document.querySelector(".number_gryffindor").textContent = allStudents.filter(isGryffindor).length;
+  document.querySelector(".number_ravenclaw").textContent = allStudents.filter(isRavenclaw).length;
+  document.querySelector(".number_hufflepuff").textContent = allStudents.filter(isHufflePuff).length;
+  document.querySelector(".number_slytherin").textContent = allStudents.filter(isSlytherin).length;
 }
 
 function filterList(filteredList) {
@@ -169,20 +243,34 @@ function isNotExpelled(student) {
   return student.expelled === false;
 }
 
+function sortList(sortedList) {
+  let direction = 1;
+  if (settings.sortDir === "desc") {
+    direction = -1;
+  } else {
+    direction = 1;
+  }
+
+  sortedList = sortedList.sort(sortByProperty);
+
+  function sortByProperty(studentA, studentB) {
+    if (studentA[settings.sortBy] < studentB[settings.sortBy]) {
+      return -1 * direction;
+    } else {
+      return 1 * direction;
+    }
+  }
+  return sortedList;
+}
 function displayStudentsList(students) {
   // clear the list
   document.querySelector("#template_wrapper").innerHTML = " ";
   console.log("arrayStudents", students);
+
+  //number of students currently displayed at the end of the page
+  document.querySelector(".number_displayed").textContent = students.length;
   // build a new list
   students.forEach(displayStudent);
-  //displaying the stats info
-  document.querySelector(".number_total_students").textContent = students.length;
-  document.querySelector(".number_displayed").textContent = students.length;
-  document.querySelector(".number_expelled").textContent = students.filter(isExpelled).length;
-  document.querySelector(".number_gryffindor").textContent = students.filter(isGryffindor).length;
-  document.querySelector(".number_ravenclaw").textContent = students.filter(isRavenclaw).length;
-  document.querySelector(".number_hufflepuff").textContent = students.filter(isHufflePuff).length;
-  document.querySelector(".number_slytherin").textContent = students.filter(isSlytherin).length;
 }
 
 function displayStudent(student) {

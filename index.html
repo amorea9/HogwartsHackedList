@@ -34,19 +34,16 @@
               <option value="expelled">Expelled students</option>
               <option value="not_expelled">Not Expelled students</option>
             </select>
-            <select id="sort">
-              <option value="all">--sort by--</option>
-              <option value="first_name_asc">First name ascending ↑</option>
-              <option value="first_name_desc">First name descending ↓</option>
-              <option value="last_name_asc">Last name ascending ↑</option>
-              <option value="last_name_desc">Last name descending ↓</option>
-            </select>
+            <div id="sort">
+              <span>Sort by:</span>
+              <span data-action="sort" data-sort="firstName" data-sort-direction="asc">first name</span>
+              <span data-action="sort" data-sort="lastName" data-sort-direction="asc">last name</span>
+            </div>
           </div>
 
           <div class="search_div">
-            <label for="search_bar">Search: <input type="text" name="search" id="search_bar" size="10" /></label>
+            <input type="text" name="search" id="search_bar" size="15" placeholder="Search..." />
             <!-- not sure i need the output if i am just showing an updated list-->
-            <output type="text" id="output_bar"></output>
           </div>
         </nav>
 

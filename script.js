@@ -3,7 +3,9 @@
 window.addEventListener("DOMContentLoaded", init);
 
 const url = "https://petlatkea.dk/2021/hogwarts/students.json";
+const urlBlood = "https://petlatkea.dk/2021/hogwarts/families.json";
 let allStudents = [];
+let studentsBloodStatus = {};
 const Student = {
   //template
   firstName: "",
@@ -16,6 +18,7 @@ const Student = {
   expelled: false,
   bloodStatus: "",
   inquisitorialSquad: false,
+  prefect: false,
 };
 const settings = {
   filterBy: "all",
@@ -23,8 +26,6 @@ const settings = {
   sortDir: "asc",
   searchBy: "",
 };
-
-let previousChar;
 
 function init() {
   console.log("ready");
@@ -34,6 +35,7 @@ function init() {
 }
 
 function loadJSON() {
+  //load students json
   fetch(url)
     .then((response) => response.json())
     .then((jsonData) => {
@@ -42,13 +44,21 @@ function loadJSON() {
     });
 }
 
+//load blood status json
+fetch(urlBlood)
+  .then((response) => response.json())
+  .then((jsonData) => {
+    // loaded - it's an object of two arrays
+    studentsBloodStatus = jsonData;
+  });
+
 function prepareStudentsData(jsonData) {
   allStudents = jsonData.map(prepareStudentData);
-
   buildStudentsList();
 }
 
-function prepareStudentData(jsonObject) {
+//function that defines the student object
+function prepareStudentData(jsonObject, studentsBloodStatus) {
   //create object from the student template
   const student = Object.create(Student);
   const studentFullNameArray = jsonObject.fullname.trim().split(" ");
@@ -56,10 +66,15 @@ function prepareStudentData(jsonObject) {
   //first name
   student.firstName = studentFullNameArray[0].charAt(0).toUpperCase() + studentFullNameArray[0].substring(1).toLowerCase();
   //last name
-  student.lastName = studentFullNameArray.at(-1).charAt(0).toUpperCase() + studentFullNameArray.at(-1).substring(1).toLowerCase();
+
+  if (student.firstName === "Leanne") {
+    student.lastName === "Unknown";
+  } else {
+    student.lastName = studentFullNameArray.at(-1).charAt(0).toUpperCase() + studentFullNameArray.at(-1).substring(1).toLowerCase();
+  }
   //conditions for exeptions with letter
   for (let i = 1; i < jsonObject.fullname.lenght; i++) {
-    previousChar = jsonObject.fullname[i - 1];
+    let previousChar = jsonObject.fullname[i - 1];
     if (previousChar === '"' || previousChar === "-") {
       jsonObject.fullname[i].toUpperCase();
       //makes sure that if the previous character is ", the letter becomes upper case
@@ -69,10 +84,10 @@ function prepareStudentData(jsonObject) {
   }
 
   //checking for middle name
-  if (jsonObject.fullname.indexOf(" ") === jsonObject.fullname.lastIndexOf(" ")) {
+  if (jsonObject.fullname.trim().indexOf(" ") === jsonObject.fullname.trim().lastIndexOf(" ")) {
     student.middleName = "";
   } else {
-    student.middleName = jsonObject.fullname.substring(jsonObject.fullname.indexOf(" ") + 1, jsonObject.fullname.lastIndexOf(" "));
+    student.middleName = jsonObject.fullname.trim().substring(jsonObject.fullname.trim().indexOf(" ") + 1, jsonObject.fullname.trim().lastIndexOf(" "));
   }
 
   //middle name
@@ -105,8 +120,24 @@ function prepareStudentData(jsonObject) {
   student.house = jsonObject.house.trim();
   student.house = student.house.charAt(0).toUpperCase() + student.house.substring(1).toLowerCase();
   console.log("student object", student);
+  //blood
+
+  student.bloodStatus = setBlood(student) + " blood";
 
   return student;
+}
+
+//blood doesn't work
+function setBlood(student) {
+  let blood;
+  if (studentsBloodStatus.half.includes(student.lastName)) {
+    blood = "half";
+  } else if (studentsBloodStatus.pure.includes(student.lastName)) {
+    blood = "pure";
+  } else if (studentsBloodStatus.half.includes(student.lastName) && studentsBloodStatus.pure.includes(student.lastName)) {
+    blood = "half";
+  }
+  return blood;
 }
 
 function addEventsToButtons() {
@@ -119,10 +150,7 @@ function addEventsToButtons() {
 function searchString() {
   const searchBy = document.querySelector("#search_bar").value;
   settings.searchBy = searchBy.toLowerCase();
-
-  console.log("searching for", settings.searchBy);
   const searchedList = allStudents.filter(isTheStudent);
-
   function isTheStudent(student) {
     if (student.firstName.toLowerCase().includes(searchBy) || student.lastName.toLowerCase().includes(searchBy)) return student;
   }
@@ -132,19 +160,6 @@ function searchString() {
 function clear() {
   document.querySelector("#search_bar").value = "";
 }
-
-// function compareStringToArray(searchedList, searchBy) {
-//   searchedList.forEach((student) => student.compareCharacter);
-
-//   function compareCharacter(student) {
-//     for (let i = 0; i < settings.searchBy.length; i++) {
-//       if (student.firstName.split("")[i] === searchBy.split("")[i]) {
-//         return (searchedList = allStudents.filter(compareCharacter));
-//       }
-//     }
-//     return compareStringToArray(searchedList, settings.searchBy);
-//   }
-// }
 
 function readFilterOptionsValues(event) {
   //reads the value of the filter option selected
@@ -266,7 +281,6 @@ function displayStudentsList(students) {
   // clear the list
   document.querySelector("#template_wrapper").innerHTML = " ";
   console.log("arrayStudents", students);
-
   //number of students currently displayed at the end of the page
   document.querySelector(".number_displayed").textContent = students.length;
   // build a new list

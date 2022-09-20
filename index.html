@@ -26,13 +26,13 @@
         <nav>
           <div class="filter_and_sort">
             <select id="filter">
-              <option value="all">--filter by--</option>
+              <option value="all">All students</option>
+              <option value="enrolled">Enrolled students</option>
+              <option value="expelled">Expelled students</option>
               <option value="house_gryffindor">Gryffindor students</option>
               <option value="house_ravenclaw">Ravenclaw students</option>
               <option value="house_hufflepuff">Hufflepuff students</option>
               <option value="house_Slytherin">Slytherin students</option>
-              <option value="expelled">Expelled students</option>
-              <option value="not_expelled">Not Expelled students</option>
             </select>
             <div id="sort">
               <span>Sort by:</span>
@@ -53,10 +53,10 @@
             <img class="student_picture" src="images/potter_h.png" alt="harry potter" />
             <div class="name">Harry</div>
             <div class="last_name">Potter</div>
-            <div class="user_choices">
-              <button class="expel_student">Expel</button>
-              <button class="add_inquisitorial">Add to inquisitorial squad</button>
-              <button class="make_prefect">Make a prefect</button>
+            <div id="user_choices">
+              <button data-action="choice" data-field="expel_student" data-expelled="false">Expel</button>
+              <button data-action="choice" data-field="add_inquisitorial" data-inquisitorial="false">Add to inquisitorial squad</button>
+              <button data-action="choice" data-field="make_prefect" data-prefect="false">Make a prefect</button>
             </div>
           </article>
         </template>

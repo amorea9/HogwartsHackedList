@@ -51,7 +51,7 @@ nav {
   gap: 1rem;
   margin-top: 1.5rem;
 }
-.user_choices {
+#user_choices {
   display: flex;
   flex-direction: row;
   gap: 0.7rem;

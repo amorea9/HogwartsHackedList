@@ -2,10 +2,13 @@
 
 window.addEventListener("DOMContentLoaded", init);
 
+//global variables
 const url = "https://petlatkea.dk/2021/hogwarts/students.json";
 const urlBlood = "https://petlatkea.dk/2021/hogwarts/families.json";
+
 let allStudents = [];
 let studentsBloodStatus = {};
+let expelledStudents = [];
 const Student = {
   //template
   firstName: "",
@@ -135,7 +138,7 @@ function setBlood(student) {
   } else if (studentsBloodStatus.pure.includes(student.lastName)) {
     blood = "pure";
   } else if (studentsBloodStatus.half.includes(student.lastName) && studentsBloodStatus.pure.includes(student.lastName)) {
-    blood = "half";
+    blood = "muggle";
   }
   return blood;
 }
@@ -204,19 +207,19 @@ function buildStudentsList() {
   //current list is the filtered list
   const currentList = filterList(allStudents);
   const sortedList = sortList(currentList);
+
   displayStudentsList(sortedList);
 }
 
 function displayStudentsInfo(allStudents) {
   //displaying the stats info of the origial array of students at the top of the site
-  document.querySelector(".number_total_students").textContent = allStudents.length;
+  document.querySelector(".number_total_students").textContent = allStudents.filter(isEnrolled).length;
   document.querySelector(".number_expelled").textContent = allStudents.filter(isExpelled).length;
   document.querySelector(".number_gryffindor").textContent = allStudents.filter(isGryffindor).length;
   document.querySelector(".number_ravenclaw").textContent = allStudents.filter(isRavenclaw).length;
   document.querySelector(".number_hufflepuff").textContent = allStudents.filter(isHufflePuff).length;
   document.querySelector(".number_slytherin").textContent = allStudents.filter(isSlytherin).length;
 }
-
 function filterList(filteredList) {
   if (settings.filterBy === "house_gryffindor") {
     filteredList = allStudents.filter(isGryffindor);
@@ -233,8 +236,8 @@ function filterList(filteredList) {
   if (settings.filterBy === "expelled") {
     filteredList = allStudents.filter(isExpelled);
   }
-  if (settings.filterBy === "not_expelled") {
-    filteredList = allStudents.filter(isNotExpelled);
+  if (settings.filterBy === "enrolled") {
+    filteredList = allStudents.filter(isEnrolled);
   }
   return filteredList;
 }
@@ -254,10 +257,15 @@ function isSlytherin(student) {
 function isExpelled(student) {
   return student.expelled === true;
 }
-function isNotExpelled(student) {
+function isEnrolled(student) {
   return student.expelled === false;
 }
-
+function isPrefect(student) {
+  return student.prefect === true;
+}
+function isInquisitorial(student) {
+  return student.inquisitorialSquad === true;
+}
 function sortList(sortedList) {
   let direction = 1;
   if (settings.sortDir === "desc") {
@@ -296,8 +304,50 @@ function displayStudent(student) {
   clone.querySelector(".student_picture").src = student.imageFile;
   clone.querySelector(".student_picture").alt = `${student.firstName} ${student.lastName}`;
 
+  //add event listener to buttons in the clone
+  clone.querySelectorAll("[data-action='choice']").forEach((button) => button.addEventListener("click", selectChoice));
+  if (student.expelled === true) {
+    clone.querySelectorAll("[data-action='choice']").forEach((button) => button.removeEventListener("click", selectChoice));
+    student.prefect = false;
+    student.inquisitorialSquad = false;
+  }
+  //gets which button of the choice has been clicked
+  function selectChoice(event) {
+    const selectedChoice = event.target.dataset.field;
+    setChoice(selectedChoice);
+  }
+
+  function setChoice(choice, filteredList) {
+    //store the choice
+    settings.choice = choice;
+    if (settings.choice === "expel_student") {
+      if (student.firstName === "Alessia") {
+        student.expelled = false;
+        // say why can't be expelled pop up
+      } else {
+        student.expelled = !student.expelled;
+        console.log(allStudents);
+      }
+
+      //if not expelled, set the expel to true
+
+      // console.log("the student has been expelled", student);
+      // expelledStudents = allStudents.filter(isExpelled);
+      // console.log("expelled students array", expelledStudents);
+      //builds the list of students
+      buildStudentsList();
+      // } else {
+      //   console.log("this student is already expelled");
+      // }
+    }
+  }
+
   // append clone to list
   document.querySelector("#template_wrapper").appendChild(clone);
 }
 
-//for searching - use filtering on the input search field return the array of things that match the search
+function removeStudent(student) {
+  const expelledStudentIndex = allStudents.indexOf(student);
+  allStudents = allStudents.filter(isNotExpelled);
+  //allStudents.splice(expelledStudentIndex, 1);
+}

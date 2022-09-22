@@ -33,6 +33,10 @@
               <option value="house_ravenclaw">Ravenclaw students</option>
               <option value="house_hufflepuff">Hufflepuff students</option>
               <option value="house_Slytherin">Slytherin students</option>
+              <option value="inquisitorial">Inquisitorial squad members</option>
+              <option value="prefect">Prefects</option>
+              <option value="boys">Boys</option>
+              <option value="girls">Girls</option>
             </select>
             <div id="sort">
               <span>Sort by:</span>
@@ -61,6 +65,26 @@
           </article>
         </template>
       </section>
+
+      <div id="remove_aorb" class="dialog">
+        <div class="dialogcontent">
+          <button class="closebutton">close</button>
+          <h1>You can only have two prefects from each house!</h1>
+          <h2>Remove one, before you appoint more</h2>
+          <p><button class="remove_A">remove</button> <span class="candidate1">NAME, the TYPE</span></p>
+          <p><button class="remove_B">remove</button> <span class="candidate2">NAME, the TYPE</span></p>
+        </div>
+      </div>
+
+      <div id="remove_other" class="dialog">
+        <div class="dialogcontent">
+          <button class="closebutton">close</button>
+          <h1>You can only have one winner of each gender</h1>
+          <h2>Remove the other if you want to appoint a new one</h2>
+          <p><button class="remove_other">remove</button> <span class="candidate1">NAME, the TYPE</span></p>
+        </div>
+      </div>
+
       <div class="displayed_now">displaying now: <span class="number_displayed">10</span></div>
     </main>
     <footer></footer>

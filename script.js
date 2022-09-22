@@ -24,7 +24,7 @@ const Student = {
   prefect: false,
 };
 const settings = {
-  filterBy: "all",
+  filterBy: "enrolled",
   sortBy: "firstName",
   sortDir: "asc",
   searchBy: "",
@@ -57,9 +57,9 @@ fetch(urlBlood)
 
 function prepareStudentsData(jsonData) {
   allStudents = jsonData.map(prepareStudentData);
+
   buildStudentsList();
 }
-
 //function that defines the student object
 function prepareStudentData(jsonObject, studentsBloodStatus) {
   //create object from the student template
@@ -169,7 +169,6 @@ function readFilterOptionsValues(event) {
   const selectedFilterOption = event.target.value;
   setFilter(selectedFilterOption);
 }
-
 function readSortOptionsValues(event) {
   //reads the value of the sort option selected
   const sortBy = event.target.dataset.sort;
@@ -201,7 +200,6 @@ function setFilter(filter) {
   settings.filterBy = filter;
   buildStudentsList();
 }
-
 function buildStudentsList() {
   displayStudentsInfo(allStudents);
   //current list is the filtered list
@@ -210,10 +208,9 @@ function buildStudentsList() {
 
   displayStudentsList(sortedList);
 }
-
 function displayStudentsInfo(allStudents) {
   //displaying the stats info of the origial array of students at the top of the site
-  document.querySelector(".number_total_students").textContent = allStudents.filter(isEnrolled).length;
+  document.querySelector(".number_total_students").textContent = allStudents.length;
   document.querySelector(".number_expelled").textContent = allStudents.filter(isExpelled).length;
   document.querySelector(".number_gryffindor").textContent = allStudents.filter(isGryffindor).length;
   document.querySelector(".number_ravenclaw").textContent = allStudents.filter(isRavenclaw).length;
@@ -239,9 +236,20 @@ function filterList(filteredList) {
   if (settings.filterBy === "enrolled") {
     filteredList = allStudents.filter(isEnrolled);
   }
+  if (settings.filterBy === "inquisitorial") {
+    filteredList = allStudents.filter(isInquisitorial);
+  }
+  if (settings.filterBy === "prefect") {
+    filteredList = allStudents.filter(isPrefect);
+  }
+  if (settings.filterBy === "boys") {
+    filteredList = allStudents.filter(isBoy);
+  }
+  if (settings.filterBy === "girls") {
+    filteredList = allStudents.filter(isGirl);
+  }
   return filteredList;
 }
-
 function isGryffindor(student) {
   return student.house === "Gryffindor";
 }
@@ -265,6 +273,12 @@ function isPrefect(student) {
 }
 function isInquisitorial(student) {
   return student.inquisitorialSquad === true;
+}
+function isBoy(student) {
+  return student.gender === "boy";
+}
+function isGirl(student) {
+  return student.gender === "girl";
 }
 function sortList(sortedList) {
   let direction = 1;
@@ -294,7 +308,6 @@ function displayStudentsList(students) {
   // build a new list
   students.forEach(displayStudent);
 }
-
 function displayStudent(student) {
   // create clone
   const clone = document.querySelector(".student_card_template").content.cloneNode(true);
@@ -311,34 +324,60 @@ function displayStudent(student) {
     student.prefect = false;
     student.inquisitorialSquad = false;
   }
+  if (student.prefect === true) {
+    clone.querySelector("[data-prefect='false']").dataset.prefect = true;
+    clone.querySelector("[data-prefect='true']").textContent = "Revoke prefect status";
+  }
+  if (student.inquisitorialSquad === true) {
+    clone.querySelector("[data-inquisitorial='false']").dataset.inquisitorial = true;
+    clone.querySelector("[data-inquisitorial='true']").textContent = "Revoke inquisitorial status";
+  }
+
   //gets which button of the choice has been clicked
   function selectChoice(event) {
     const selectedChoice = event.target.dataset.field;
     setChoice(selectedChoice);
   }
 
-  function setChoice(choice, filteredList) {
+  function setChoice(choice) {
     //store the choice
     settings.choice = choice;
     if (settings.choice === "expel_student") {
-      if (student.firstName === "Alessia") {
-        student.expelled = false;
-        // say why can't be expelled pop up
+      expelStudent();
+      buildStudentsList();
+    } else if (settings.choice === "add_inquisitorial") {
+      addInquisitorial();
+      buildStudentsList();
+    } else if (settings.choice === "make_prefect") {
+      if (student.prefect === true) {
+        student.prefect = false;
       } else {
-        student.expelled = !student.expelled;
-        console.log(allStudents);
+        tryToMakePrefect(student);
       }
 
-      //if not expelled, set the expel to true
-
-      // console.log("the student has been expelled", student);
-      // expelledStudents = allStudents.filter(isExpelled);
-      // console.log("expelled students array", expelledStudents);
-      //builds the list of students
       buildStudentsList();
-      // } else {
-      //   console.log("this student is already expelled");
-      // }
+    }
+  }
+
+  //expel a student
+  function expelStudent() {
+    if (student.firstName === "Alessia") {
+      student.expelled = false;
+      // call pop up function when user tries to expel me
+    } else {
+      student.expelled = !student.expelled;
+    }
+  }
+
+  //add student to inquisitorial squad
+
+  function addInquisitorial() {
+    if (student.house === "Slytherin" || student.bloodStatus === "pure blood") {
+      student.inquisitorialSquad = !student.inquisitorialSquad;
+      console.log("added to the inquisitorial squad", student);
+    } else {
+      //popup message
+      console.log("this student can't be added to the inquisitorial squad");
     }
   }
 
@@ -346,8 +385,66 @@ function displayStudent(student) {
   document.querySelector("#template_wrapper").appendChild(clone);
 }
 
-function removeStudent(student) {
-  const expelledStudentIndex = allStudents.indexOf(student);
-  allStudents = allStudents.filter(isNotExpelled);
-  //allStudents.splice(expelledStudentIndex, 1);
+//make prefect
+function tryToMakePrefect(prefectCandidate) {
+  //filter of all prefects
+  const prefects = allStudents.filter((student) => student.prefect);
+
+  //all the prefects where the house is the same as the selected prefect (array object)
+  const other = prefects.filter((student) => student.house === prefectCandidate.house);
+  //number of prefects
+  const numberOfPrefects = other.length;
+  //if there is another student of the same house
+  if (other !== undefined && numberOfPrefects >= 2) {
+    console.log("there can only be two prefect for each house");
+    removeAorB(prefects[0], prefects[1]);
+  } else {
+    makePrefect(prefectCandidate);
+  }
+
+  function removeAorB(prefectA, prefectB) {
+    //ask user to ignore or remove A or B
+    document.querySelector("#remove_aorb").classList.add("show");
+    document.querySelector("#remove_aorb .closebutton").addEventListener("click", closeDialog);
+    document.querySelector(".remove_A").addEventListener("click", clickRemoveA);
+    document.querySelector(".remove_B").addEventListener("click", clickRemoveB);
+
+    //show names of the two animals
+    document.querySelector("#remove_aorb .candidate1").textContent = `${prefectA.firstName}, from ${prefectA.house}`;
+    document.querySelector("#remove_aorb .candidate2").textContent = `${prefectB.firstName}, from ${prefectB.house}`;
+    //if ignore do nothing
+
+    function closeDialog() {
+      document.querySelector("#remove_aorb").classList.remove("show");
+      document.querySelector("#remove_aorb .closebutton").removeEventListener("click", closeDialog);
+      document.querySelector(".remove_A").removeEventListener("click", clickRemoveA);
+      document.querySelector(".remove_B").removeEventListener("click", clickRemoveB);
+    }
+    //if remove A
+    function clickRemoveA() {
+      removePrefect(prefectA);
+      makePrefect(prefectCandidate);
+      buildStudentsList();
+      closeDialog();
+      console.log("click A is not a prefect anymore");
+      console.log(prefects);
+    }
+    //if remove B
+    function clickRemoveB() {
+      removePrefect(prefectB);
+      makePrefect(prefectCandidate);
+      buildStudentsList();
+      closeDialog();
+      console.log("click B is not a prefect anymore");
+      console.log(prefects);
+    }
+  }
+  function removePrefect(studentPrefect) {
+    studentPrefect.prefect = false;
+    console.log(prefects);
+  }
+  function makePrefect(student) {
+    student.prefect = true;
+    console.log(prefects);
+  }
 }

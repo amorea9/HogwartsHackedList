@@ -13,7 +13,8 @@
 
       <!--probably a template here too? -->
       <section class="school_info">
-        <div class="total_students"><span class="number_total_students">1</span><span class="students">Students</span></div>
+        <div class="displayed_now"><span class="number_displayed">10</span>Displayed now</div>
+        <div class="total_students"><span class="number_total_students">1</span><span class="students">Total students</span></div>
         <div class="expelled"><span class="number_expelled">1</span><span class="expelled_students">Expelled</span></div>
         <div class="gryffindor"><span class="number_gryffindor">1</span><span class="gryffindor_students">Gryffindor</span></div>
         <div class="ravenclaw"><span class="number_ravenclaw">1</span><span class="ravenclaw_students">Ravenclaw</span></div>
@@ -23,37 +24,37 @@
     </header>
     <main>
       <section id="main_wrapper">
-        <nav>
+        <nav class="navigation">
           <div class="filter_and_sort">
-            <select id="filter">
-              <option value="all">All students</option>
-              <option value="enrolled">Enrolled students</option>
-              <option value="expelled">Expelled students</option>
-              <option value="house_gryffindor">Gryffindor students</option>
-              <option value="house_ravenclaw">Ravenclaw students</option>
-              <option value="house_hufflepuff">Hufflepuff students</option>
-              <option value="house_Slytherin">Slytherin students</option>
-              <option value="inquisitorial">Inquisitorial squad members</option>
-              <option value="prefect">Prefects</option>
-              <option value="boys">Boys</option>
-              <option value="girls">Girls</option>
-            </select>
+            <div class="filter">
+              <span>Filter by:</span>
+              <select id="filter">
+                <option value="all">All students</option>
+                <option value="enrolled">Enrolled students</option>
+                <option value="expelled">Expelled students</option>
+                <option value="house_gryffindor">Gryffindor students</option>
+                <option value="house_ravenclaw">Ravenclaw students</option>
+                <option value="house_hufflepuff">Hufflepuff students</option>
+                <option value="house_Slytherin">Slytherin students</option>
+                <option value="inquisitorial">Inquisitorial squad members</option>
+                <option value="prefect">Prefects</option>
+                <option value="boys">Boys</option>
+                <option value="girls">Girls</option>
+              </select>
+            </div>
             <div id="sort">
               <span>Sort by:</span>
               <span data-action="sort" data-sort="firstName" data-sort-direction="asc">first name</span>
               <span data-action="sort" data-sort="lastName" data-sort-direction="asc">last name</span>
+              <span data-action="sort" data-sort="house" data-sort-direction="asc">house</span>
             </div>
           </div>
-
-          <div class="search_div">
-            <input type="text" name="search" id="search_bar" size="15" placeholder="Search..." />
-            <!-- not sure i need the output if i am just showing an updated list-->
-          </div>
+          <input type="text" name="search" id="search_bar" size="15" placeholder="Search" />
         </nav>
 
         <div id="template_wrapper"></div>
         <template class="student_card_template">
-          <article>
+          <article class="student_card">
             <img class="student_picture" src="images/potter_h.png" alt="harry potter" />
             <div class="name">Harry</div>
             <div class="last_name">Potter</div>
@@ -65,7 +66,12 @@
           </article>
         </template>
       </section>
-
+      <div id="cannot_expel" class="dialog">
+        <div class="dialogcontent">
+          <button class="closebutton">close</button>
+          <h1>Oh dear! You cannot expel this student!</h1>
+        </div>
+      </div>
       <div id="remove_aorb" class="dialog">
         <div class="dialogcontent">
           <button class="closebutton">close</button>
@@ -84,8 +90,6 @@
           <p><button class="remove_other">remove</button> <span class="candidate1">NAME, the TYPE</span></p>
         </div>
       </div>
-
-      <div class="displayed_now">displaying now: <span class="number_displayed">10</span></div>
     </main>
     <footer></footer>
 

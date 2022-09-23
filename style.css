@@ -5,20 +5,31 @@
 /* nav to be flex
 /* article to be flex 
 section */
+@import url("http://fonts.cdnfonts.com/css/harry-potter");
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+html {
+  position: relative;
+}
+body {
+  background-image: url(../HogwartsList_CleanUp/images/jules-marvin-eguilos-cADpgwU6Fm4-unsplash.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 h1 {
   text-align: center;
   padding: 2rem;
   padding-bottom: 4rem;
+  font-family: "Harry Potter", sans-serif;
 }
 header {
   height: 30vh;
-  background-color: aquamarine;
+  /* background-color: rgb(90, 156, 249); */
 }
 #template_wrapper {
   display: grid;
@@ -35,21 +46,23 @@ header {
   gap: 2rem;
 }
 .school_info div,
-article {
+.student_card {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
 }
 
-nav {
+.navigation {
   grid-column: 1/-1;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   gap: 1rem;
   margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(9, 14, 67, 0.25);
 }
 #user_choices {
   display: flex;
@@ -60,16 +73,20 @@ nav {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   gap: 2rem;
 }
 .search_div {
   display: flex;
   flex-direction: column;
 }
-article {
-  background-color: rgb(120, 194, 120);
+.student_card {
   padding: 0.8rem;
   border-radius: 10px;
+}
+.student_card:hover {
+  transition: transform 0.5s ease-in-out;
+  transform: scale(1.05);
 }
 button {
   height: 100%;
@@ -84,7 +101,8 @@ button {
 }
 
 #sort span.sortby[data-sort="firstName"],
-#sort span.sortby[data-sort="lastName"] {
+#sort span.sortby[data-sort="lastName"],
+#sort span.sortby[data-sort="house"] {
   text-decoration: underline;
 }
 
@@ -94,11 +112,23 @@ button {
 #sort span.sortby[data-sort-direction="desc"]::after {
   content: " ↑";
 }
+span[data-action="sort"] {
+  padding: 0.8rem;
+  border: 2px solid white;
+  border-radius: 12px;
+}
 
 .search_div {
   margin-right: 2rem;
 }
-
+#search_bar,
+select {
+  border-radius: 12px;
+  border: 2px solid white;
+  background-color: transparent;
+  padding: 0.8rem;
+  color: white;
+}
 .dialog {
   display: none;
 }
@@ -147,4 +177,26 @@ button {
 
 .dialog .closebutton:hover {
   color: black;
+}
+
+.student_picture {
+  max-width: 100%;
+  height: 10rem;
+}
+.gryffindor_style {
+  background-color: rgb(201, 95, 95);
+}
+.ravenclaw_style {
+  background-color: rgb(69, 135, 197);
+}
+.hufflepuff_style {
+  background-color: rgb(239, 239, 118);
+}
+.slytherin_style {
+  background-color: rgb(66, 138, 66);
+}
+
+img {
+  border-radius: 35px;
+  border: 3px solid black;
 }

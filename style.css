@@ -16,9 +16,9 @@ html {
   position: relative;
 }
 body {
-  background-image: url(../HogwartsList_CleanUp/images/assets_pictures/olena-sergienko-p8NSgvjEk-Y-unsplash.jpg);
+  background-image: url(../HogwartsList_CleanUp/images/assets_pictures/vino-li-PkJbY56JKh4-unsplash.jpg);
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
 }
 h1 {
@@ -30,7 +30,6 @@ h1 {
 }
 header {
   height: 30vh;
-  /* background-color: rgb(90, 156, 249); */
 }
 #template_wrapper {
   display: grid;
@@ -38,6 +37,7 @@ header {
   grid-template-rows: auto;
   gap: 2rem;
   margin: 1rem 3rem;
+  margin-top: 2rem;
 }
 .school_info {
   display: flex;
@@ -85,7 +85,9 @@ select {
   padding: 0.8rem;
   border-radius: 10px;
   font-size: 1.2rem;
-  background-color: antiquewhite;
+  background-color: rgba(140, 139, 139, 0.373);
+  color: white;
+  border: 3px solid white;
 }
 .student_card:hover {
   transition: transform 0.5s ease-in-out;
@@ -97,14 +99,6 @@ button {
   border-style: solid;
   color: white;
 }
-
-/* div[data-action="choice"] {
-  background: black;
-  padding: 1rem;
-  border-style: solid;
-  z-index: 2;
-} */
-
 button[data-field="expel_student"] {
   background-image: url(/HogwartsList_CleanUp/images/SVG/expel_icon.svg);
 }
@@ -150,11 +144,8 @@ select {
 
 .dialog.show {
   position: fixed;
-  /* width: 100vw;
-  height: 100vh; */
   top: 50%;
   left: 50%;
-
   transform: translate(-50%, -50%);
   max-width: 100%;
   max-height: 100%;
@@ -195,7 +186,6 @@ select {
 #student_modal_content {
   border-radius: 12px;
   border: 2px solid white;
-  /* background-color: rgb(0, 0, 0); */
   font-family: Arial, Helvetica, sans-serif;
   padding: 2rem;
   position: relative;
@@ -206,11 +196,6 @@ select {
   gap: 1rem;
   align-items: center;
   justify-items: center;
-
-  /* background-image: url(/HogwartsList_CleanUp/images/SVG/prefect_icon.svg);
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center; */
 }
 .student_full_name {
   grid-column: 1/-1;
@@ -308,10 +293,10 @@ img.buttons_icon {
 }
 
 img[data-expelled="true"],
-img[data-inquisitorial="false"],
-img[data-prefect="false"] {
+.greyed_out {
   filter: grayscale(100%);
 }
+
 button.remove_A,
 button.remove_B {
   color: white;
@@ -343,7 +328,6 @@ button.remove_B:hover {
 }
 #do_not_click {
   padding: 0.5rem 1rem;
-  background-color: rgb(92, 16, 16);
 }
 #do_not_click:hover {
   cursor: pointer;
@@ -353,4 +337,29 @@ button.remove_B:hover {
 #do_not_click.hacked {
   filter: grayscale(1);
   transform: skew(-0.06turn, 18deg);
+}
+
+body.hacked {
+  background-image: url(../HogwartsList_CleanUp/images/assets_pictures/carolin-thiergart-Q0GCvjG1ioA-unsplash.jpg);
+}
+.student_card.hacked {
+  background-color: black;
+  border: 2px solid white;
+}
+
+/* not sure how to add the animation here */
+.student_expelled {
+  animation: 3s wiggleAndDisappear ease-in-out 1;
+}
+
+@keyframes wiggleAndDisappear {
+  from {
+    rotate: 0deg;
+    opacity: 100%;
+  }
+  to {
+    rotate: 360deg;
+    opacity: 0;
+    scale: 0;
+  }
 }

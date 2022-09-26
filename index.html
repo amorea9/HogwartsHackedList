@@ -62,16 +62,16 @@
               <!--HAVE TO FINISH THIS-->
               <img class="buttons_icon" src="images/SVG/expel_icon.svg" alt="expel_icon" data-action="choice" data-field="expel_student" data-expelled="false" />
 
-              <img class="buttons_icon" src="images/SVG/inquisitorial_icon.svg" alt="inquisitorial_icon" data-action="choice" data-field="add_inquisitorial" data-inquisitorial="false" />
+              <img class="buttons_icon greyed_out" src="images/SVG/inquisitorial_icon.svg" alt="inquisitorial_icon" data-action="choice" data-field="add_inquisitorial" data-inquisitorial="false" />
 
-              <img class="buttons_icon" src="images/SVG/prefect_icon.svg" alt="prefect_icon" data-action="choice" data-field="make_prefect" data-prefect="false" />
+              <img class="buttons_icon greyed_out" src="images/SVG/prefect_icon.svg" alt="prefect_icon" data-action="choice" data-field="make_prefect" data-prefect="false" />
             </div>
           </article>
         </template>
       </section>
 
       <!--DO NOT CLICK BUTTON for hacking-->
-      <div class="hack_button_container"><button id="do_not_click">DO NOT CLICK</button></div>
+      <div class="hack_button_container"><img id="do_not_click" class="buttons_icon" src="images/SVG/golden_snitch.svg" alt="golden_snitch" /></div>
 
       <!--CANNOT EXPEL-->
       <div id="cannot_expel" class="dialog">
@@ -91,6 +91,16 @@
           <h1>Only students with a pure blood status or students from the Slytherin house can be added to the inquisitorial squad.</h1>
         </div>
       </div>
+      <!--CANNOT EXPEL-->
+      <div id="inquisition_timeout" class="dialog">
+        <div class="dialogcontent">
+          <button class="closebutton">X</button>
+          <h1>
+            <span class="candidate3">The student </span> <br />
+            has been removed from the inquisitorial squad!
+          </h1>
+        </div>
+      </div>
 
       <!--REMOVE ONE PREFECT-->
       <div id="remove_aorb" class="dialog">
@@ -99,8 +109,8 @@
           <h1>There can only be two prefects for each house!</h1>
           <h2>Remove one, before you appoint more</h2>
           <div class="remove_buttons">
-            <p><button class="remove_A">remove</button> <span class="candidate1">NAME, the TYPE</span></p>
-            <p><button class="remove_B">remove</button> <span class="candidate2">NAME, the TYPE</span></p>
+            <p><button class="remove_A">remove</button> <span class="candidate1">NAME, from HOUSE</span></p>
+            <p><button class="remove_B">remove</button> <span class="candidate2">NAME, from HOUSE</span></p>
           </div>
         </div>
       </div>

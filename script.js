@@ -337,23 +337,8 @@ function displayStudent(student) {
   clone.querySelectorAll("[data-action='choice']").forEach((button) => button.addEventListener("click", selectChoice));
   //add event listener to the student card
   clone.querySelector(".student_picture").addEventListener("click", showPopUp);
-  //remove event listener if the student is expelled and remove responsabilities
-  if (student.expelled === true) {
-    clone.querySelector("[data-expelled='false']").dataset.expelled = true;
-    clone.querySelectorAll("[data-action='choice']").forEach((button) => button.removeEventListener("click", selectChoice));
-    student.prefect = false;
-    student.inquisitorial = false;
-  }
-  //change button content
-  if (student.prefect === true) {
-    clone.querySelector("[data-prefect='false']").dataset.prefect = true;
-  }
-  if (student.inquisitorialSquad === true) {
-    clone.querySelector("[data-inquisitorial='false']").dataset.inquisitorial = true;
-  }
 
   function selectChoice(event) {
-    console.log("click");
     const selectedChoice = event.target.dataset.field;
     setChoice(selectedChoice);
   }
@@ -363,11 +348,19 @@ function displayStudent(student) {
     settings.choice = choice;
     console.log(settings.choice);
     if (settings.choice === "expel_student") {
+      // clone.querySelector("[data-field='expel_student']").forEach((card) => card.addEventListener("animationend", expelStudent));
+      // clone.querySelector(".student_card").classList.add("student_expelled");
       expelStudent(student);
       buildStudentsList();
     } else if (settings.choice === "add_inquisitorial") {
-      addInquisitorial(student);
-      buildStudentsList();
+      if (hacked === true) {
+        addInquisitorial(student);
+        limitInquisitorialSquad();
+        buildStudentsList();
+      } else {
+        addInquisitorial(student);
+        buildStudentsList();
+      }
     } else if (settings.choice === "make_prefect") {
       if (student.prefect === true) {
         student.prefect = false;
@@ -377,12 +370,31 @@ function displayStudent(student) {
       buildStudentsList();
     }
   }
+  //remove event listener if the student is expelled and remove responsabilities
+  if (student.expelled === true) {
+    clone.querySelector("[data-expelled='false']").dataset.expelled = true;
+    clone.querySelectorAll("[data-action='choice']").forEach((button) => button.removeEventListener("click", selectChoice));
+    student.prefect = false;
+    student.inquisitorial = false;
+  }
+  //change button content
+  if (student.prefect === true) {
+    clone.querySelector("[data-field='make_prefect']").classList.remove("greyed_out");
+  } else {
+    clone.querySelector("[data-field='make_prefect']").classList.add("greyed_out");
+  }
+  if (student.inquisitorialSquad === true) {
+    clone.querySelector("[data-field='add_inquisitorial']").classList.remove("greyed_out");
+  } else {
+    clone.querySelector("[data-field='add_inquisitorial']").classList.add("greyed_out");
+  }
   //gets which button of the choice has been clicked
-
+  if (hacked) {
+    clone.querySelector(".student_card").classList.add("hacked");
+  }
   //arrow function to pass info about student
-
   //modals styling
-  function showPopUp(card) {
+  function showPopUp() {
     const modal = document.querySelector(".student_modal");
     modal.classList.add("show");
 
@@ -414,6 +426,7 @@ function displayStudent(student) {
     modal.querySelector(".house_crest").src = `images/assets_pictures/${student.house}.png`;
     modal.querySelector(".house_crest").alt = student.house;
     document.querySelector(".student_modal .closebutton").addEventListener("click", closeTextDialog);
+
     if (student.house === "Gryffindor") {
       modal.querySelector("#student_modal_content").classList.remove("ravenclaw_style");
       modal.querySelector("#student_modal_content").classList.remove("hufflepuff_style");
@@ -436,7 +449,6 @@ function displayStudent(student) {
       modal.querySelector("#student_modal_content").classList.add("slytherin_style");
     }
   }
-
   // append clone to list
   document.querySelector("#template_wrapper").appendChild(clone);
 }
@@ -464,7 +476,6 @@ function addInquisitorial(student) {
     console.log("added to the inquisitorial squad", student);
   } else {
     cannotInquisitorial(student);
-    console.log("this student can't be added to the inquisitorial squad");
   }
 }
 //MAKE PREFECT
@@ -480,7 +491,6 @@ function tryToMakePrefect(prefectCandidate) {
   //if there is another student of the same house
   if (other !== undefined && numberOfPrefects >= 2) {
     removeAorB(other[0], other[1]);
-    console.log("there can only be two prefect for each house");
   } else {
     makePrefect(prefectCandidate);
   }
@@ -533,12 +543,15 @@ function cannotExpel(student) {
   document.querySelector("#cannot_expel .closebutton").addEventListener("click", closeTextDialog);
 }
 function cannotInquisitorial(student) {
-  console.log("cannot inquisitorial");
   document.querySelector("#cannot_inquisition").classList.add("show");
 
   document.querySelector("#cannot_inquisition .closebutton").addEventListener("click", closeTextDialog);
 }
-
+function removedInquisitorialMemberPopUP(student) {
+  document.querySelector("#inquisition_timeout").classList.add("show");
+  document.querySelector("#inquisition_timeout .candidate3").textContent = `${student.firstName} ${student.lastName}, from ${student.house}`;
+  document.querySelector("#inquisition_timeout .closebutton").addEventListener("click", closeTextDialog);
+}
 function closeTextDialog() {
   document.querySelector("#cannot_expel").classList.remove("show");
   document.querySelector("#cannot_expel .closebutton").removeEventListener("click", closeTextDialog);
@@ -546,18 +559,23 @@ function closeTextDialog() {
   document.querySelector("#cannot_inquisition .closebutton").removeEventListener("click", closeTextDialog);
   document.querySelector(".student_modal").classList.remove("show");
   document.querySelector(".student_modal .closebutton").removeEventListener("click", closeTextDialog);
+  document.querySelector("#inquisition_timeout").classList.remove("show");
+  document.querySelector("#inquisition_timeout .closebutton").removeEventListener("click", closeTextDialog);
 }
-
+//hack the system
 function hackTheSystem() {
   hacked = true;
+  document.querySelector(".hack_button_container").removeEventListener("click", hackTheSystem);
   document.querySelector("#do_not_click").classList.add("hacked");
+  document.querySelector("body").classList.add("hacked");
+
   if (hacked === true) {
     insertNewStudent();
     randomizeBloodStatus();
     buildStudentsList();
+    limitInquisitorialSquad();
   }
-
-  //limitInquisitorialSquad();
+  document.addEventListener("click", randomizeBloodStatus);
 }
 
 function insertNewStudent() {
@@ -575,6 +593,23 @@ function insertNewStudent() {
   allStudents.push(myself);
   buildStudentsList();
 }
-function randomizeBloodStatus() {
-  const bloodArray = ["pure", "half", "muggle"];
+function randomizeBloodStatus(student) {
+  allStudents.forEach((student) => {
+    const bloodArray = ["pure", "half", "muggle"];
+    let bloodArrayRandom = Math.floor(Math.random() * 3);
+    student.bloodStatus = bloodArray[bloodArrayRandom] + " blood";
+  });
+}
+function limitInquisitorialSquad(student) {
+  //if a member is in the squad
+  //limit time
+  allStudents.forEach((student) => {
+    if (student.inquisitorialSquad === true) {
+      setTimeout(() => {
+        student.inquisitorialSquad = false;
+        buildStudentsList();
+        removedInquisitorialMemberPopUP(student);
+      }, 5000);
+    }
+  });
 }

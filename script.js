@@ -10,7 +10,7 @@ let allStudents = [];
 let studentsBloodStatus = {};
 let expelledStudents = [];
 let activeStudentsArray = [];
-
+let hacked = false;
 const Student = {
   //template
   firstName: "",
@@ -70,7 +70,7 @@ function prepareStudentsData(jsonData) {
   buildStudentsList();
 }
 //function that defines the student object
-function prepareStudentData(jsonObject, studentsBloodStatus) {
+function prepareStudentData(jsonObject) {
   //create object from the student template
   const student = Object.create(Student);
   const studentFullNameArray = jsonObject.fullname.trim().split(" ");
@@ -144,11 +144,12 @@ function setBlood(student) {
     blood = "half";
   } else if (studentsBloodStatus.pure.includes(student.lastName)) {
     blood = "pure";
-  } else if (studentsBloodStatus.half.includes(student.lastName) && studentsBloodStatus.pure.includes(student.lastName)) {
+  } else if (student.firstName === student.lastName) {
+    blood = "unknown";
+  } else {
     blood = "muggle";
-  } else if (student.firstName === "Leanne") {
-    blood = "unknown status of";
   }
+
   return blood;
 }
 function addEventsToButtons() {
@@ -156,6 +157,7 @@ function addEventsToButtons() {
   document.querySelectorAll("#sort [data-action='sort']").forEach((button) => button.addEventListener("click", readSortOptionsValues));
   document.querySelector("#search_bar").addEventListener("keydown", searchString);
   //can also use keyup event
+  document.querySelector(".hack_button_container").addEventListener("click", hackTheSystem);
 }
 function searchString() {
   const searchBy = document.querySelector("#search_bar").value;
@@ -208,10 +210,11 @@ function setFilter(filter) {
 function buildStudentsList() {
   //current list is the filtered list
   displayStudentsInfo(allStudents);
+  activeStudentsArray = allStudents.filter((student) => student.expelled === false);
   // displayStudentsList(expelledStudents);
-  const currentList = filterList(allStudents);
+  const currentList = filterList(activeStudentsArray);
   const sortedList = sortList(currentList);
-  displayStudentsList(sortedList);
+  displayStudentsList(currentList);
 }
 function displayStudentsInfo(allStudents) {
   //displaying the stats info of the origial array of students at the top of the site
@@ -225,6 +228,9 @@ function displayStudentsInfo(allStudents) {
 }
 function filterList(filteredList) {
   settings.activeArray = activeStudentsArray;
+  if (settings.filterBy === "all") {
+    filteredList = allStudents.filter((student) => student.expelled === false || student.expelled === true);
+  }
   if (settings.filterBy === "house_gryffindor") {
     filteredList = settings.activeArray.filter(isGryffindor);
   }
@@ -257,6 +263,7 @@ function filterList(filteredList) {
   }
   return filteredList;
 }
+
 function isGryffindor(student) {
   return student.house === "Gryffindor";
 }
@@ -325,23 +332,28 @@ function displayStudent(student) {
   clone.querySelector(".last_name").textContent = student.lastName;
   clone.querySelector(".student_picture").src = student.imageFile;
   clone.querySelector(".student_picture").alt = `${student.firstName} ${student.lastName}`;
-  //remove event listener if the student is expelled
+
+  //add event listener to buttons in the clone
+  clone.querySelectorAll("[data-action='choice']").forEach((button) => button.addEventListener("click", selectChoice));
+  //add event listener to the student card
+  clone.querySelector(".student_picture").addEventListener("click", showPopUp);
+  //remove event listener if the student is expelled and remove responsabilities
   if (student.expelled === true) {
+    clone.querySelector("[data-expelled='false']").dataset.expelled = true;
     clone.querySelectorAll("[data-action='choice']").forEach((button) => button.removeEventListener("click", selectChoice));
+    student.prefect = false;
+    student.inquisitorial = false;
   }
   //change button content
   if (student.prefect === true) {
     clone.querySelector("[data-prefect='false']").dataset.prefect = true;
-    clone.querySelector("[data-prefect='true']").textContent = "Revoke prefect status";
   }
   if (student.inquisitorialSquad === true) {
     clone.querySelector("[data-inquisitorial='false']").dataset.inquisitorial = true;
-    clone.querySelector("[data-inquisitorial='true']").textContent = "Revoke inquisitorial status";
   }
-  //add event listener to buttons in the clone
-  clone.querySelectorAll("[data-action='choice']").forEach((button) => button.addEventListener("click", selectChoice));
 
   function selectChoice(event) {
+    console.log("click");
     const selectedChoice = event.target.dataset.field;
     setChoice(selectedChoice);
   }
@@ -349,6 +361,7 @@ function displayStudent(student) {
   function setChoice(choice) {
     //store the choice
     settings.choice = choice;
+    console.log(settings.choice);
     if (settings.choice === "expel_student") {
       expelStudent(student);
       buildStudentsList();
@@ -369,15 +382,59 @@ function displayStudent(student) {
   //arrow function to pass info about student
 
   //modals styling
+  function showPopUp(card) {
+    const modal = document.querySelector(".student_modal");
+    modal.classList.add("show");
 
-  if (student.house === "Gryffindor") {
-    clone.querySelector("article.student_card").classList.add("gryffindor_style");
-  } else if (student.house === "Ravenclaw") {
-    clone.querySelector("article.student_card").classList.add("ravenclaw_style");
-  } else if (student.house === "Hufflepuff") {
-    clone.querySelector("article.student_card").classList.add("hufflepuff_style");
-  } else if (student.house === "Slytherin") {
-    clone.querySelector("article.student_card").classList.add("slytherin_style");
+    //populate the modal with the right information
+    modal.querySelector(".student_full_name").textContent = `${student.firstName} ${student.lastName}`;
+    modal.querySelector(".name").textContent = student.firstName;
+    modal.querySelector(".last_name").textContent = student.lastName;
+    modal.querySelector(".nickname").textContent = student.nickName;
+    modal.querySelector(".middle_name").textContent = student.middleName;
+    modal.querySelector(".blood_status").textContent = student.bloodStatus;
+    if (student.prefect) {
+      modal.querySelector(".prefect_status").textContent = "yes";
+    } else {
+      modal.querySelector(".prefect_status").textContent = "no";
+    }
+    if (student.inquisitorialSquad) {
+      modal.querySelector(".inquisitorial_status").textContent = "yes";
+    } else {
+      modal.querySelector(".inquisitorial_status").textContent = "no";
+    }
+    if (student.expelled) {
+      modal.querySelector(".expelled_status").textContent = "yes";
+    } else {
+      modal.querySelector(".expelled_status").textContent = "no";
+    }
+
+    modal.querySelector(".student_picture").src = student.imageFile;
+    modal.querySelector(".student_picture").alt = `${student.firstName} ${student.lastName}`;
+    modal.querySelector(".house_crest").src = `images/assets_pictures/${student.house}.png`;
+    modal.querySelector(".house_crest").alt = student.house;
+    document.querySelector(".student_modal .closebutton").addEventListener("click", closeTextDialog);
+    if (student.house === "Gryffindor") {
+      modal.querySelector("#student_modal_content").classList.remove("ravenclaw_style");
+      modal.querySelector("#student_modal_content").classList.remove("hufflepuff_style");
+      modal.querySelector("#student_modal_content").classList.remove("slytherin_style");
+      modal.querySelector("#student_modal_content").classList.add("gryffindor_style");
+    } else if (student.house === "Ravenclaw") {
+      modal.querySelector("#student_modal_content").classList.remove("gryffindor_style");
+      modal.querySelector("#student_modal_content").classList.remove("hufflepuff_style");
+      modal.querySelector("#student_modal_content").classList.remove("slytherin_style");
+      modal.querySelector("#student_modal_content").classList.add("ravenclaw_style");
+    } else if (student.house === "Hufflepuff") {
+      modal.querySelector("#student_modal_content").classList.remove("gryffindor_style");
+      modal.querySelector("#student_modal_content").classList.remove("ravenclaw_style");
+      modal.querySelector("#student_modal_content").classList.remove("slytherin_style");
+      modal.querySelector("#student_modal_content").classList.add("hufflepuff_style");
+    } else if (student.house === "Slytherin") {
+      modal.querySelector("#student_modal_content").classList.remove("gryffindor_style");
+      modal.querySelector("#student_modal_content").classList.remove("ravenclaw_style");
+      modal.querySelector("#student_modal_content").classList.remove("hufflepuff_style");
+      modal.querySelector("#student_modal_content").classList.add("slytherin_style");
+    }
   }
 
   // append clone to list
@@ -406,7 +463,7 @@ function addInquisitorial(student) {
     student.inquisitorialSquad = !student.inquisitorialSquad;
     console.log("added to the inquisitorial squad", student);
   } else {
-    //popup message
+    cannotInquisitorial(student);
     console.log("this student can't be added to the inquisitorial squad");
   }
 }
@@ -415,14 +472,15 @@ function tryToMakePrefect(prefectCandidate) {
   settings.activeArray = activeStudentsArray;
   //filter of all prefects
   const prefects = settings.activeArray.filter((student) => student.prefect);
+
   //all the prefects where the house is the same as the selected prefect (array object)
   const other = prefects.filter((student) => student.house === prefectCandidate.house);
   //number of prefects
   const numberOfPrefects = other.length;
   //if there is another student of the same house
   if (other !== undefined && numberOfPrefects >= 2) {
+    removeAorB(other[0], other[1]);
     console.log("there can only be two prefect for each house");
-    removeAorB(prefects[0], prefects[1]);
   } else {
     makePrefect(prefectCandidate);
   }
@@ -451,8 +509,6 @@ function tryToMakePrefect(prefectCandidate) {
       makePrefect(prefectCandidate);
       buildStudentsList();
       closeDialog();
-      console.log("click A is not a prefect anymore");
-      console.log(prefects);
     }
     //if remove B
     function clickRemoveB() {
@@ -460,17 +516,13 @@ function tryToMakePrefect(prefectCandidate) {
       makePrefect(prefectCandidate);
       buildStudentsList();
       closeDialog();
-      console.log("click B is not a prefect anymore");
-      console.log(prefects);
     }
   }
   function removePrefect(studentPrefect) {
     studentPrefect.prefect = false;
-    console.log(prefects);
   }
   function makePrefect(student) {
     student.prefect = true;
-    console.log(prefects);
   }
 }
 // MODALS AND POP UPS
@@ -480,8 +532,49 @@ function cannotExpel(student) {
   //add close button
   document.querySelector("#cannot_expel .closebutton").addEventListener("click", closeTextDialog);
 }
+function cannotInquisitorial(student) {
+  console.log("cannot inquisitorial");
+  document.querySelector("#cannot_inquisition").classList.add("show");
+
+  document.querySelector("#cannot_inquisition .closebutton").addEventListener("click", closeTextDialog);
+}
 
 function closeTextDialog() {
   document.querySelector("#cannot_expel").classList.remove("show");
   document.querySelector("#cannot_expel .closebutton").removeEventListener("click", closeTextDialog);
+  document.querySelector("#cannot_inquisition").classList.remove("show");
+  document.querySelector("#cannot_inquisition .closebutton").removeEventListener("click", closeTextDialog);
+  document.querySelector(".student_modal").classList.remove("show");
+  document.querySelector(".student_modal .closebutton").removeEventListener("click", closeTextDialog);
+}
+
+function hackTheSystem() {
+  hacked = true;
+  document.querySelector("#do_not_click").classList.add("hacked");
+  if (hacked === true) {
+    insertNewStudent();
+    randomizeBloodStatus();
+    buildStudentsList();
+  }
+
+  //limitInquisitorialSquad();
+}
+
+function insertNewStudent() {
+  const myself = {
+    firstName: "Alessia",
+    lastName: "Amore",
+    bloodStatus: "pure blood",
+    gender: "girl",
+    house: "Ravenclaw",
+    imageFile: "images/potter_h.png",
+    expelled: false,
+    inquisitorialSquad: false,
+    prefect: false,
+  };
+  allStudents.push(myself);
+  buildStudentsList();
+}
+function randomizeBloodStatus() {
+  const bloodArray = ["pure", "half", "muggle"];
 }

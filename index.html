@@ -25,69 +25,105 @@
     <main>
       <section id="main_wrapper">
         <nav class="navigation">
-          <div class="filter_and_sort">
-            <div class="filter">
-              <span>Filter by:</span>
-              <select id="filter">
-                <option value="all">All students</option>
-                <option value="enrolled">Enrolled students</option>
-                <option value="expelled">Expelled students</option>
-                <option value="house_gryffindor">Gryffindor students</option>
-                <option value="house_ravenclaw">Ravenclaw students</option>
-                <option value="house_hufflepuff">Hufflepuff students</option>
-                <option value="house_Slytherin">Slytherin students</option>
-                <option value="inquisitorial">Inquisitorial squad members</option>
-                <option value="prefect">Prefects</option>
-                <option value="boys">Boys</option>
-                <option value="girls">Girls</option>
-              </select>
-            </div>
-            <div id="sort">
-              <span>Sort by:</span>
-              <span data-action="sort" data-sort="firstName" data-sort-direction="asc">first name</span>
-              <span data-action="sort" data-sort="lastName" data-sort-direction="asc">last name</span>
-              <span data-action="sort" data-sort="house" data-sort-direction="asc">house</span>
-            </div>
+          <div class="filter">
+            <span>Filter by:</span>
+            <select id="filter">
+              <option value="all">All students</option>
+              <option value="enrolled">Enrolled students</option>
+              <option value="expelled">Expelled students</option>
+              <option value="house_gryffindor">Gryffindor students</option>
+              <option value="house_ravenclaw">Ravenclaw students</option>
+              <option value="house_hufflepuff">Hufflepuff students</option>
+              <option value="house_Slytherin">Slytherin students</option>
+              <option value="inquisitorial">Inquisitorial squad members</option>
+              <option value="prefect">Prefects</option>
+              <option value="boys">Boys</option>
+              <option value="girls">Girls</option>
+            </select>
           </div>
+          <div id="sort">
+            <span>Sort by:</span>
+            <span data-action="sort" data-sort="firstName" data-sort-direction="asc">first name</span>
+            <span data-action="sort" data-sort="lastName" data-sort-direction="asc">last name</span>
+            <span data-action="sort" data-sort="house" data-sort-direction="asc">house</span>
+          </div>
+
           <input type="text" name="search" id="search_bar" size="15" placeholder="Search" />
         </nav>
 
         <div id="template_wrapper"></div>
+
         <template class="student_card_template">
           <article class="student_card">
             <img class="student_picture" src="images/potter_h.png" alt="harry potter" />
             <div class="name">Harry</div>
             <div class="last_name">Potter</div>
             <div id="user_choices">
-              <button data-action="choice" data-field="expel_student" data-expelled="false">Expel</button>
-              <button data-action="choice" data-field="add_inquisitorial" data-inquisitorial="false">Add to inquisitorial squad</button>
-              <button data-action="choice" data-field="make_prefect" data-prefect="false">Make a prefect</button>
+              <!--HAVE TO FINISH THIS-->
+              <img class="buttons_icon" src="images/SVG/expel_icon.svg" alt="expel_icon" data-action="choice" data-field="expel_student" data-expelled="false" />
+
+              <img class="buttons_icon" src="images/SVG/inquisitorial_icon.svg" alt="inquisitorial_icon" data-action="choice" data-field="add_inquisitorial" data-inquisitorial="false" />
+
+              <img class="buttons_icon" src="images/SVG/prefect_icon.svg" alt="prefect_icon" data-action="choice" data-field="make_prefect" data-prefect="false" />
             </div>
           </article>
         </template>
       </section>
+
+      <!--DO NOT CLICK BUTTON for hacking-->
+      <div class="hack_button_container"><button id="do_not_click">DO NOT CLICK</button></div>
+
+      <!--CANNOT EXPEL-->
       <div id="cannot_expel" class="dialog">
         <div class="dialogcontent">
-          <button class="closebutton">close</button>
-          <h1>Oh dear! You cannot expel this student!</h1>
-        </div>
-      </div>
-      <div id="remove_aorb" class="dialog">
-        <div class="dialogcontent">
-          <button class="closebutton">close</button>
-          <h1>You can only have two prefects from each house!</h1>
-          <h2>Remove one, before you appoint more</h2>
-          <p><button class="remove_A">remove</button> <span class="candidate1">NAME, the TYPE</span></p>
-          <p><button class="remove_B">remove</button> <span class="candidate2">NAME, the TYPE</span></p>
+          <button class="closebutton">X</button>
+          <h1>
+            Oh dear! <br />
+            You cannot expel this student!
+          </h1>
         </div>
       </div>
 
-      <div id="remove_other" class="dialog">
+      <!--CANNOT INQUISITION-->
+      <div id="cannot_inquisition" class="dialog">
         <div class="dialogcontent">
-          <button class="closebutton">close</button>
-          <h1>You can only have one winner of each gender</h1>
-          <h2>Remove the other if you want to appoint a new one</h2>
-          <p><button class="remove_other">remove</button> <span class="candidate1">NAME, the TYPE</span></p>
+          <button class="closebutton">X</button>
+          <h1>Only students with a pure blood status or students from the Slytherin house can be added to the inquisitorial squad.</h1>
+        </div>
+      </div>
+
+      <!--REMOVE ONE PREFECT-->
+      <div id="remove_aorb" class="dialog">
+        <div class="dialogcontent">
+          <button class="closebutton">X</button>
+          <h1>There can only be two prefects for each house!</h1>
+          <h2>Remove one, before you appoint more</h2>
+          <div class="remove_buttons">
+            <p><button class="remove_A">remove</button> <span class="candidate1">NAME, the TYPE</span></p>
+            <p><button class="remove_B">remove</button> <span class="candidate2">NAME, the TYPE</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!--MODALS-->
+      <div class="student_modal">
+        <div id="student_modal_content">
+          <h1 class="student_full_name">Harry Potter</h1>
+          <button class="closebutton">X</button>
+
+          <img class="student_picture" src="images/potter_h.png" alt="harry potter" />
+          <img class="house_crest" src="images/assets_pictures/Gryffindor.png" alt="house_crest" />
+
+          <div class="details_modal">
+            <div class="details_spans"><span>First name:</span><span class="name">Harry</span></div>
+            <div class="details_spans"><span>Middle name:</span><span class="middle_name">James</span></div>
+            <div class="details_spans"><span>Last name:</span><span class="last_name">Potter</span></div>
+            <div class="details_spans"><span>Nickname:</span><span class="nickname">Nickname</span></div>
+            <div class="details_spans"><span>Blood status:</span><span class="blood_status">Half blood</span></div>
+            <div class="details_spans"><span>Expelled:</span><span class="expelled_status">No</span></div>
+            <div class="details_spans"><span>Prefect:</span><span class="prefect_status">No</span></div>
+            <div class="details_spans"><span>Inquisitorial member:</span><span class="inquisitorial_status">No</span></div>
+          </div>
         </div>
       </div>
     </main>

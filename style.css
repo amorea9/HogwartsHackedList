@@ -16,7 +16,7 @@ html {
   position: relative;
 }
 body {
-  background-image: url(../HogwartsList_CleanUp/images/jules-marvin-eguilos-cADpgwU6Fm4-unsplash.jpg);
+  background-image: url(../HogwartsList_CleanUp/images/assets_pictures/olena-sergienko-p8NSgvjEk-Y-unsplash.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -26,6 +26,7 @@ h1 {
   padding: 2rem;
   padding-bottom: 4rem;
   font-family: "Harry Potter", sans-serif;
+  color: white;
 }
 header {
   height: 30vh;
@@ -44,6 +45,7 @@ header {
   justify-content: center;
   align-items: center;
   gap: 2rem;
+  color: white;
 }
 .school_info div,
 .student_card {
@@ -51,6 +53,9 @@ header {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+}
+select {
+  margin-left: 1rem;
 }
 
 .navigation {
@@ -62,20 +67,16 @@ header {
   gap: 1rem;
   margin-top: 1.5rem;
   padding: 1rem;
-  background-color: rgba(9, 14, 67, 0.25);
+  background-color: rgba(158, 158, 158, 0.25);
+  color: white;
 }
 #user_choices {
   display: flex;
   flex-direction: row;
   gap: 0.7rem;
+  padding: 1rem;
 }
-.filter_and_sort {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-}
+
 .search_div {
   display: flex;
   flex-direction: column;
@@ -83,6 +84,8 @@ header {
 .student_card {
   padding: 0.8rem;
   border-radius: 10px;
+  font-size: 1.2rem;
+  background-color: antiquewhite;
 }
 .student_card:hover {
   transition: transform 0.5s ease-in-out;
@@ -90,20 +93,27 @@ header {
 }
 button {
   height: 100%;
+  background: transparent;
+  border-style: solid;
+  color: white;
 }
 
+/* div[data-action="choice"] {
+  background: black;
+  padding: 1rem;
+  border-style: solid;
+  z-index: 2;
+} */
+
+button[data-field="expel_student"] {
+  background-image: url(/HogwartsList_CleanUp/images/SVG/expel_icon.svg);
+}
 #sort {
   display: flex;
   flex-direction: row;
-  gap: 1em;
+  gap: 1rem;
   justify-content: space-around;
   align-items: center;
-}
-
-#sort span.sortby[data-sort="firstName"],
-#sort span.sortby[data-sort="lastName"],
-#sort span.sortby[data-sort="house"] {
-  text-decoration: underline;
 }
 
 #sort span.sortby[data-sort-direction="asc"]::after {
@@ -117,6 +127,10 @@ span[data-action="sort"] {
   border: 2px solid white;
   border-radius: 12px;
 }
+.sortby {
+  background-color: rgb(255, 255, 255);
+  color: black;
+}
 
 .search_div {
   margin-right: 2rem;
@@ -129,32 +143,119 @@ select {
   padding: 0.8rem;
   color: white;
 }
-.dialog {
+.dialog,
+.student_modal {
   display: none;
 }
 
 .dialog.show {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
+  /* width: 100vw;
+  height: 100vh; */
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.4);
 }
 
+.student_modal.show {
+  position: fixed;
+  /* width: 100vw;
+  height: 100vh; */
+  top: 50%;
+  left: 50%;
+  width: 60vw;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .dialogcontent {
-  background-color: rgb(233, 233, 255);
+  border-radius: 12px;
+  border: 2px solid white;
+  background-color: rgb(0, 0, 0);
   font-family: Arial, Helvetica, sans-serif;
-  padding: 10vw 8vw 8vw 8vw;
+  padding: 2rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+#student_modal_content {
+  border-radius: 12px;
+  border: 2px solid white;
+  /* background-color: rgb(0, 0, 0); */
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 2rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  color: white;
+  gap: 1rem;
+  align-items: center;
+  justify-items: center;
+
+  /* background-image: url(/HogwartsList_CleanUp/images/SVG/prefect_icon.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center; */
+}
+.student_full_name {
+  grid-column: 1/-1;
+  grid-row: 1;
+  padding: 0;
+  padding-bottom: 0.5rem;
+}
+
+.details_modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  border: 2px solid white;
+  padding: 0.5rem;
+  grid-column: 2;
+  grid-row: 2;
+}
+#student_modal_content > .student_picture {
+  width: 10rem;
+  grid-row: 2;
+  grid-column: 1;
+  align-self: center;
+  justify-self: center;
+  height: 10.5rem;
+}
+
+.details_spans {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.house_crest {
+  grid-row: 3;
+  grid-column: 1/-1;
+  height: 11rem;
+  width: 10rem;
 }
 
 .dialog h1 {
   margin: 0;
   font-size: 130%;
+  padding-bottom: 1rem;
 }
 
 .dialog h2 {
@@ -163,26 +264,25 @@ select {
   font-weight: lighter;
 }
 
-.dialog .closebutton {
-  -moz-appearance: none;
-  appearance: none;
+.dialog .closebutton,
+#student_modal_content .closebutton {
   position: absolute;
-  top: 4vw;
-  right: 4vw;
+  top: -35%;
+  right: 2vw;
   border: none;
-  background-color: transparent;
-  font-size: 90%;
-  color: darkgray;
+  font-size: 1.5rem;
+  color: rgb(253, 253, 253);
+  cursor: pointer;
+}
+#student_modal_content .closebutton {
+  top: -43%;
 }
 
-.dialog .closebutton:hover {
-  color: black;
+.dialog .closebutton:hover,
+#student_modal_content .closebutton:hover {
+  color: rgb(126, 126, 126);
 }
 
-.student_picture {
-  max-width: 100%;
-  height: 10rem;
-}
 .gryffindor_style {
   background-color: rgb(201, 95, 95);
 }
@@ -190,13 +290,67 @@ select {
   background-color: rgb(69, 135, 197);
 }
 .hufflepuff_style {
-  background-color: rgb(239, 239, 118);
+  background-color: rgb(226, 215, 54);
 }
 .slytherin_style {
   background-color: rgb(66, 138, 66);
 }
 
-img {
+.student_picture {
   border-radius: 35px;
   border: 3px solid black;
+  margin-bottom: 0.5rem;
+  max-width: 100%;
+  height: 10rem;
+}
+img.buttons_icon {
+  height: 4rem;
+}
+
+img[data-expelled="true"],
+img[data-inquisitorial="false"],
+img[data-prefect="false"] {
+  filter: grayscale(100%);
+}
+button.remove_A,
+button.remove_B {
+  color: white;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 2px solid white;
+  background-color: rgb(0, 0, 0);
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+.remove_buttons {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+button.remove_A:hover,
+button.remove_B:hover {
+  color: black;
+  background-color: white;
+}
+.hack_button_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 5rem;
+}
+#do_not_click {
+  padding: 0.5rem 1rem;
+  background-color: rgb(92, 16, 16);
+}
+#do_not_click:hover {
+  cursor: pointer;
+  transform: skew(-0.06turn, 18deg);
+  transition: transform 0.2s ease-in-out;
+}
+#do_not_click.hacked {
+  filter: grayscale(1);
+  transform: skew(-0.06turn, 18deg);
 }

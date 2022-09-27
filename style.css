@@ -5,7 +5,13 @@
 /* nav to be flex
 /* article to be flex 
 section */
-@import url("http://fonts.cdnfonts.com/css/harry-potter");
+/* @import url("http://fonts.cdnfonts.com/css/harry-potter"); */
+@font-face {
+  font-family: "Harry Potter";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Harry Potter"), url("https://fonts.cdnfonts.com/s/25438/HARRP___.woff") format("woff");
+}
 
 * {
   box-sizing: border-box;
@@ -174,7 +180,7 @@ select {
   border-radius: 12px;
   border: 2px solid white;
   background-color: rgb(0, 0, 0);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
   padding: 2rem;
   position: relative;
   display: flex;
@@ -186,7 +192,7 @@ select {
 #student_modal_content {
   border-radius: 12px;
   border: 2px solid white;
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
   padding: 2rem;
   position: relative;
   display: grid;

@@ -37,7 +37,6 @@ async function init() {
   addEventsToButtons();
   loadJSON();
 }
-
 async function loadJSON() {
   //load blood status first
   await loadJSONBlood();
@@ -50,7 +49,6 @@ async function loadJSON() {
       console.log("families loaded");
     });
 }
-
 //load blood status json
 function loadJSONBlood() {
   fetch(urlBlood)
@@ -61,7 +59,6 @@ function loadJSONBlood() {
       console.log("blood loaded");
     });
 }
-
 function prepareStudentsData(jsonData) {
   allStudents = jsonData.map(prepareStudentData);
   activeStudentsArray = jsonData.map(prepareStudentData);
@@ -74,17 +71,24 @@ function prepareStudentData(jsonObject) {
   //create object from the student template
   const student = Object.create(Student);
   const studentFullNameArray = jsonObject.fullname.trim().split(" ");
+
   student.gender = jsonObject.gender;
   //first name
-  student.firstName = studentFullNameArray[0].charAt(0).toUpperCase() + studentFullNameArray[0].substring(1).toLowerCase();
+  student.firstName = getFirstName(studentFullNameArray);
   //last name
+  student.lastName = getLastName(student, studentFullNameArray);
+  //middle name
+  // student.middleName = student.middleName.charAt(0).toUpperCase() + student.middleName.substring(1).toLowerCase();
+  student.middleName = getMiddleName(jsonObject);
+  //nickname
+  student.nickName = getNickName(jsonObject);
+  //image file
+  student.imageFile = getImage(student);
+  // house
+  student.house = getHouse(jsonObject);
+  //blood
+  student.bloodStatus = setBlood(student) + " blood";
 
-  if (student.firstName === "Leanne") {
-    student.lastName = "Leanne";
-    student.bloodStatus = "Unknown";
-  } else {
-    student.lastName = studentFullNameArray.at(-1).charAt(0).toUpperCase() + studentFullNameArray.at(-1).substring(1).toLowerCase();
-  }
   //conditions for exeptions with letter
   for (let i = 1; i < jsonObject.fullname.lenght; i++) {
     let previousChar = jsonObject.fullname[i - 1];
@@ -95,20 +99,6 @@ function prepareStudentData(jsonObject) {
       jsonObject.fullname[i];
     }
   }
-
-  //checking for middle name
-  if (jsonObject.fullname.trim().indexOf(" ") === jsonObject.fullname.trim().lastIndexOf(" ")) {
-    student.middleName = "";
-  } else {
-    student.middleName = jsonObject.fullname.trim().substring(jsonObject.fullname.trim().indexOf(" ") + 1, jsonObject.fullname.trim().lastIndexOf(" "));
-  }
-
-  //middle name
-  student.middleName = student.middleName.charAt(0).toUpperCase() + student.middleName.substring(1).toLowerCase();
-
-  //nickname
-  student.nickName = jsonObject.fullname.substring(jsonObject.fullname.indexOf('"') + 1, jsonObject.fullname.lastIndexOf('"'));
-
   //if they have a nickname, they don't have a middlename
   //incorrect but temporary fix for Ernie
   if (student.nickName != "") {
@@ -116,26 +106,60 @@ function prepareStudentData(jsonObject) {
   } else {
     student.middleName = student.middleName;
   }
+  return student;
+}
+function getFirstName(studentFullNameArray) {
+  const name = studentFullNameArray[0].charAt(0).toUpperCase() + studentFullNameArray[0].substring(1).toLowerCase();
+  return name;
+}
 
-  //image file
+function getLastName(student, studentFullNameArray) {
+  let surname;
+  if (student.firstName === "Leanne") {
+    surname = "Leanne";
+    student.bloodStatus = "Unknown";
+  } else {
+    surname = studentFullNameArray.at(-1).charAt(0).toUpperCase() + studentFullNameArray.at(-1).substring(1).toLowerCase();
+  }
+  return surname;
+}
+
+function getMiddleName(jsonObject) {
+  let middleName;
+  if (jsonObject.fullname.trim().indexOf(" ") === jsonObject.fullname.trim().lastIndexOf(" ")) {
+    middleName = "";
+  } else {
+    middleName = jsonObject.fullname.trim().substring(jsonObject.fullname.trim().indexOf(" ") + 1, jsonObject.fullname.trim().lastIndexOf(" "));
+  }
+  return middleName;
+}
+
+function getNickName(jsonObject) {
+  let nickname;
+  nickname = jsonObject.fullname.substring(jsonObject.fullname.indexOf('"'), jsonObject.fullname.lastIndexOf('"') + 1);
+  return nickname;
+}
+
+function getImage(student) {
+  let imageFile;
   if (student.lastName === "Patil") {
-    student.imageFile = `images/${student.lastName.toLowerCase()}_${student.firstName.toLowerCase()}.png`;
+    imageFile = `images/${student.lastName.toLowerCase()}_${student.firstName.toLowerCase()}.png`;
   } else if (student.lastName === "Finch-fletchley") {
     const finchArray = student.lastName.split("-");
-    student.imageFile = `images/${finchArray[1].toLowerCase()}_${student.firstName.charAt(0).toLowerCase()}.png`;
+    imageFile = `images/${finchArray[1].toLowerCase()}_${student.firstName.charAt(0).toLowerCase()}.png`;
     student.lastName = finchArray[1].charAt(0).toUpperCase() + finchArray[1].substring(1).toLowerCase();
     student.middleName = finchArray[0];
   } else {
-    student.imageFile = `images/${student.lastName.toLowerCase()}_${student.firstName.charAt(0).toLowerCase()}.png`;
+    imageFile = `images/${student.lastName.toLowerCase()}_${student.firstName.charAt(0).toLowerCase()}.png`;
   }
+  return imageFile;
+}
 
-  // house
-  student.house = jsonObject.house.trim();
-  student.house = student.house.charAt(0).toUpperCase() + student.house.substring(1).toLowerCase();
-
-  //blood
-  student.bloodStatus = setBlood(student) + " blood";
-  return student;
+function getHouse(jsonObject) {
+  let house = jsonObject.house.trim();
+  let studentHouse;
+  studentHouse = house.charAt(0).toUpperCase() + house.substring(1).toLowerCase();
+  return studentHouse;
 }
 //blood
 function setBlood(student) {
@@ -167,9 +191,6 @@ function searchString() {
     if (student.firstName.toLowerCase().includes(settings.searchBy) || student.lastName.toLowerCase().includes(settings.searchBy)) return student;
   }
   displayStudentsList(searchedList);
-}
-function clear() {
-  document.querySelector("#search_bar").value = "";
 }
 function readFilterOptionsValues(event) {
   //reads the value of the filter option selected
@@ -263,7 +284,6 @@ function filterList(filteredList) {
   }
   return filteredList;
 }
-
 function isGryffindor(student) {
   return student.house === "Gryffindor";
 }
@@ -577,7 +597,6 @@ function hackTheSystem() {
   }
   document.addEventListener("click", randomizeBloodStatus);
 }
-
 function insertNewStudent() {
   const myself = {
     firstName: "Alessia",
@@ -585,7 +604,7 @@ function insertNewStudent() {
     bloodStatus: "pure blood",
     gender: "girl",
     house: "Ravenclaw",
-    imageFile: "images/potter_h.png",
+    imageFile: "images/alessia_a.png",
     expelled: false,
     inquisitorialSquad: false,
     prefect: false,

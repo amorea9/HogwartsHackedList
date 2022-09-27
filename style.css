@@ -16,7 +16,7 @@ html {
   position: relative;
 }
 body {
-  background-image: url(../HogwartsList_CleanUp/images/assets_pictures/vino-li-PkJbY56JKh4-unsplash.jpg);
+  background-image: url(../HogwartsHackedList/images/assets_pictures/vino-li-PkJbY56JKh4-unsplash.jpg);
   background-position: center;
   background-repeat: repeat;
   background-size: cover;
@@ -100,7 +100,7 @@ button {
   color: white;
 }
 button[data-field="expel_student"] {
-  background-image: url(/HogwartsList_CleanUp/images/SVG/expel_icon.svg);
+  background-image: url(/HogwartsHackedList/images/SVG/expel_icon.svg);
 }
 #sort {
   display: flex;
@@ -340,14 +340,14 @@ button.remove_B:hover {
 }
 
 body.hacked {
-  background-image: url(../HogwartsList_CleanUp/images/assets_pictures/carolin-thiergart-Q0GCvjG1ioA-unsplash.jpg);
+  background-image: url(../HogwartsHackedList/images/assets_pictures/carolin-thiergart-Q0GCvjG1ioA-unsplash.jpg);
 }
 .student_card.hacked {
   background-color: black;
   border: 2px solid white;
 }
 
-/* not sure how to add the animation here */
+/* not sure how to add the animation here :( */
 .student_expelled {
   animation: 3s wiggleAndDisappear ease-in-out 1;
 }

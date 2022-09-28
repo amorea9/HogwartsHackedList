@@ -408,7 +408,7 @@ function displayStudent(student) {
   } else {
     clone.querySelector("[data-field='add_inquisitorial']").classList.add("greyed_out");
   }
-  //gets which button of the choice has been clicked
+
   if (hacked) {
     clone.querySelector(".student_card").classList.add("hacked");
   }
@@ -425,6 +425,7 @@ function displayStudent(student) {
     modal.querySelector(".nickname").textContent = student.nickName;
     modal.querySelector(".middle_name").textContent = student.middleName;
     modal.querySelector(".blood_status").textContent = student.bloodStatus;
+
     if (student.prefect) {
       modal.querySelector(".prefect_status").textContent = "yes";
     } else {
@@ -564,7 +565,6 @@ function cannotExpel(student) {
 }
 function cannotInquisitorial(student) {
   document.querySelector("#cannot_inquisition").classList.add("show");
-
   document.querySelector("#cannot_inquisition .closebutton").addEventListener("click", closeTextDialog);
 }
 function removedInquisitorialMemberPopUP(student) {
